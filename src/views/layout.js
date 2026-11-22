@@ -30,6 +30,8 @@ const renderLayout = ({ title = '', body }) => `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles/style.css">
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
   <title>${title ? `${title} | ` : ''}trakt-widgets</title>
 </head>
 <body class="bg-[#080808] text-white min-h-screen flex flex-col font-sans antialiased">
