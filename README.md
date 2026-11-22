@@ -23,7 +23,7 @@ Drop this anywhere — GitHub README, personal site, anywhere you can render an 
 ```html
 <!-- Last watched -->
 <img
-  src="https://{your-domain}/{username}/watched.png"
+  src="https://{your-domain}/{username}/watched.jpg"
   alt="Last watched"
 />
 ```

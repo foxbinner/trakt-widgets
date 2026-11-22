@@ -82,23 +82,16 @@ const renderHome = () => {
     <div class="flex w-full flex-col items-center gap-3 lg:ml-auto lg:max-w-[520px]">
       <p class="text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-gray-600" id="home-card-sublabel">foxbinner &middot; demo</p>
       <div class="w-full max-w-[520px] overflow-hidden border border-white/10 bg-[#0a0a0a] ring-1 ring-white/[0.04]" style="aspect-ratio:16/9;box-shadow:0 20px 80px rgba(0,0,0,0.7)">
-        <img id="demo-img" class="block h-full w-full object-cover" src="/foxbinner/watched.png" alt="Trakt card preview">
+        <img id="demo-img" class="block h-full w-full object-cover" src="/foxbinner/watched.jpg" alt="Trakt card preview">
       </div>
-      <p class="min-h-[1em] font-mono text-[0.65rem] text-gray-600" id="home-card-url">/foxbinner/watched.png</p>
+      <p class="min-h-[1em] font-mono text-[0.65rem] text-gray-600" id="home-card-url">/foxbinner/watched.jpg</p>
       <div class="flex gap-2">
-        <button id="btn-copy-full" onclick="copyUrl('full')" class="copy-action-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 text-xs font-medium text-gray-400 transition-colors hover:border-white/20 hover:text-white">
+        <button id="btn-copy" onclick="copyUrl()" class="copy-action-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 text-xs font-medium text-gray-400 transition-colors hover:border-white/20 hover:text-white">
           <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
-          Copy (1504x846)
-        </button>
-        <button id="btn-copy-half" onclick="copyUrl('half')" class="copy-action-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 text-xs font-medium text-gray-400 transition-colors hover:border-white/20 hover:text-white">
-          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="9" y="9" width="13" height="13" rx="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          Copy (752x423)
+          Copy Link
         </button>
       </div>
     </div>
@@ -115,10 +108,10 @@ const renderHome = () => {
 
   function showCard(val) {
     currentSlug = val;
-    var imgUrl = location.origin + '/' + encodeURIComponent(val) + '/watched.png';
+    var imgUrl = location.origin + '/' + encodeURIComponent(val) + '/watched.jpg';
     demoImg.src = imgUrl + '?_=' + Date.now();
     sublabel.textContent = val + ' \xb7 last watched';
-    cardUrl.textContent = '/' + val + '/watched.png';
+    cardUrl.textContent = '/' + val + '/watched.jpg';
   }
 
   function goToCard(e) {
@@ -133,11 +126,9 @@ const renderHome = () => {
     showCard(val);
   }
 
-  function copyUrl(type) {
-    var suffix = type === 'half' ? '_half' : '';
-    var url = location.origin + '/' + encodeURIComponent(currentSlug) + '/watched' + suffix + '.png';
-    var btnId = type === 'half' ? 'btn-copy-half' : 'btn-copy-full';
-    var btn = document.getElementById(btnId);
+  function copyUrl() {
+    var url = location.origin + '/' + encodeURIComponent(currentSlug) + '/watched.jpg';
+    var btn = document.getElementById('btn-copy');
     navigator.clipboard.writeText(url).then(function() {
       var orig = btn.innerHTML;
       btn.style.color = '#4ade80';

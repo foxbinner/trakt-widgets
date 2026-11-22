@@ -30,12 +30,46 @@ const roundedRect = (ctx, x, y, w, h, r) => {
   ctx.closePath();
 };
 
+const TRAKT_PATH = new Path2D(
+  'M30.17,30.22l-1.46-1.46,19.16-19.17c-.05-.39-.13-.77-.23-1.15l-20.31,20.33,2.16,2.16-1.46,' +
+    '1.46-3.62-3.62L46.85,6.29c-.15-.3-.31-.6-.5-.88l-23.33,23.35,4.31,4.31-1.46,1.46-14.39-14.4,' +
+    '1.46-1.46,8.62,8.62L45.1,3.72c-2.07-2.29-5.05-3.72-8.37-3.72H11.27C5.05,0,0,5.05,0,11.27v25.48' +
+    'c0,6.22,5.05,11.26,11.27,11.26h25.47c6.22,0,11.27-5.04,11.27-11.26V12.38l-17.83,17.84Z' +
+    'M21.54,25.91l-7.91-7.93,1.46-1.46,7.91,7.92-1.46,1.47Z' +
+    'M23.69,23.74l-7.91-7.92,1.46-1.46,7.92,7.92-1.47,1.46Z' +
+    'M43.4,35.12c0,4.57-3.71,8.28-8.28,8.28H12.88c-4.56,0-8.28-3.71-8.28-8.28V12.88' +
+    'c0-4.57,3.71-8.28,8.28-8.28h20.78v2.08H12.88c-3.42,0-6.2,2.78-6.2,6.2v22.23' +
+    'c0,3.42,2.78,6.21,6.2,6.21h22.24c3.42,0,6.2-2.79,6.2-6.21v-3.51h2.08v3.51Z',
+);
+
+/** Draws the Trakt logo in the top-right corner. */
+const drawLogo = (ctx, alpha = 0.6) => {
+  const LOGO_SIZE = 110;
+  const k = LOGO_SIZE / 48; // SVG viewBox is 48x48
+  ctx.save();
+  ctx.translate(1354, 40);
+  ctx.scale(k, k);
+  ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+  ctx.fill(TRAKT_PATH);
+  ctx.restore();
+};
+
+/** Downscales the canvas if needed and encodes it as JPEG. */
+const encodeJpeg = async (canvas, scale) => {
+  let target = canvas;
+  if (scale !== 1) {
+    target = createCanvas(Math.round(W * scale), Math.round(H * scale));
+    target.getContext('2d').drawImage(canvas, 0, 0, target.width, target.height);
+  }
+  return { buffer: await target.encode('jpeg', 92), mime: 'image/jpeg' };
+};
+
 /**
  * Renders the card to a Buffer.
- * @param {{ data: object, format: "jpeg"|"png"|"webp", scale?: number }} opts
+ * @param {{ data: object, scale?: number }} opts
  * @returns {Promise<{ buffer: Buffer, mime: string }>}
  */
-const renderCard = async ({ data, format = 'jpeg', scale = 1 }) => {
+const renderCard = async ({ data, scale = 1 }) => {
   const canvas = createCanvas(W, H);
   const ctx = canvas.getContext('2d');
 
@@ -132,60 +166,48 @@ const renderCard = async ({ data, format = 'jpeg', scale = 1 }) => {
     ctx.restore();
   }
 
-  // ── Trakt logo (top-right) ──────────────────────────────────────────────
-  {
-    // SVG viewBox is 0 0 48 48, rendered at 110×110 → scale = 110/48
-    const LOGO_X = 1354;
-    const LOGO_Y = 40;
-    const LOGO_SIZE = 110;
-    const scale = LOGO_SIZE / 48;
-    ctx.save();
-    ctx.translate(LOGO_X, LOGO_Y);
-    ctx.scale(scale, scale);
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    const traktPath = new Path2D(
-      'M30.17,30.22l-1.46-1.46,19.16-19.17c-.05-.39-.13-.77-.23-1.15l-20.31,20.33,2.16,2.16-1.46,' +
-        '1.46-3.62-3.62L46.85,6.29c-.15-.3-.31-.6-.5-.88l-23.33,23.35,4.31,4.31-1.46,1.46-14.39-14.4,' +
-        '1.46-1.46,8.62,8.62L45.1,3.72c-2.07-2.29-5.05-3.72-8.37-3.72H11.27C5.05,0,0,5.05,0,11.27v25.48' +
-        'c0,6.22,5.05,11.26,11.27,11.26h25.47c6.22,0,11.27-5.04,11.27-11.26V12.38l-17.83,17.84Z' +
-        'M21.54,25.91l-7.91-7.93,1.46-1.46,7.91,7.92-1.46,1.47Z' +
-        'M23.69,23.74l-7.91-7.92,1.46-1.46,7.92,7.92-1.47,1.46Z' +
-        'M43.4,35.12c0,4.57-3.71,8.28-8.28,8.28H12.88c-4.56,0-8.28-3.71-8.28-8.28V12.88' +
-        'c0-4.57,3.71-8.28,8.28-8.28h20.78v2.08H12.88c-3.42,0-6.2,2.78-6.2,6.2v22.23' +
-        'c0,3.42,2.78,6.21,6.2,6.21h22.24c3.42,0,6.2-2.79,6.2-6.21v-3.51h2.08v3.51Z',
-    );
-    ctx.fill(traktPath);
-    ctx.restore();
-  }
+  drawLogo(ctx);
 
-  // ── Downscale ─────────────────────────────────────────────────────────────
-  let targetCanvas = canvas;
-  if (scale !== 1) {
-    const sw = Math.round(W * scale);
-    const sh = Math.round(H * scale);
-    targetCanvas = createCanvas(sw, sh);
-    const sctx = targetCanvas.getContext('2d');
-    sctx.drawImage(canvas, 0, 0, sw, sh);
-  }
-
-  // ── Encode ───────────────────────────────────────────────────────────────
-  let buffer;
-  let mime;
-  switch (format) {
-    case 'png':
-      buffer = await targetCanvas.encode('png');
-      mime = 'image/png';
-      break;
-    case 'webp':
-      buffer = await targetCanvas.encode('webp', 90);
-      mime = 'image/webp';
-      break;
-    default:
-      buffer = await targetCanvas.encode('jpeg', 92);
-      mime = 'image/jpeg';
-  }
-
-  return { buffer, mime };
+  return encodeJpeg(canvas, scale);
 };
 
-module.exports = { renderCard };
+/**
+ * Renders a "404" error card in the same size and style as the normal card.
+ * @param {{ message: string, username?: string, scale?: number }} opts
+ * @returns {Promise<{ buffer: Buffer, mime: string }>}
+ */
+const renderErrorCard = async ({ message, username = '', scale = 1 }) => {
+  const canvas = createCanvas(W, H);
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Soft red glow behind the code
+  const glow = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 620);
+  glow.addColorStop(0, 'rgba(237,28,36,0.22)');
+  glow.addColorStop(1, 'rgba(237,28,36,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  ctx.font = "700 300px 'Exo 2'";
+  ctx.fillStyle = 'rgba(237,28,36,0.85)';
+  ctx.fillText('404', W / 2, 470);
+
+  ctx.font = "700 60px 'Exo 2'";
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(message, W / 2, 590);
+
+  ctx.font = "400 40px 'Exo 2'";
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText(username ? `@${username}` : 'trakt-widgets', W / 2, 660);
+
+  ctx.textAlign = 'left';
+  drawLogo(ctx, 0.4);
+
+  return encodeJpeg(canvas, scale);
+};
+module.exports = { renderCard, renderErrorCard };
