@@ -13,6 +13,7 @@ const watched = async (req, next) => {
   return await trakt.users
     .history({
       username: slug,
+      limit: 1,
     })
     .then(async response => {
       if (!response.length)
