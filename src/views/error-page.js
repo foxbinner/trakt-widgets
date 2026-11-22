@@ -1,6 +1,4 @@
-﻿"use strict";
-
-const { renderLayout } = require("./layouts/default");
+﻿const { renderLayout } = require('./layout');
 
 /**
  * Renders the HTML error page.
@@ -26,7 +24,7 @@ const renderErrorPage = ({ error }) => {
       </div>
     </div>
     <p class="mt-6 text-base font-medium text-white">${error.message}</p>
-    <p class="mt-2 text-sm text-gray-500">Something went wrong. Please try again or go back home.</p>
+    <p class="mt-2 text-sm text-gray-500">${error.status === 404 ? 'This page does not exist.' : 'Something went wrong. Please try again or go back home.'}</p>
     <div class="mt-8">
       <a href="/" class="inline-flex items-center gap-2 rounded-xl bg-[#ed1c24] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#c91920]">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -1,21 +1,20 @@
-"use strict";
-
 // Trakt white icon (inline base64 SVG)
 const TRAKT_ICON_WHITE =
-  "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEgewogICAgICAgIGZpbGw6ICNmZmY7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJfeDJEXy1wcm9kdWN0aW9uIj4KICAgIDxwYXRoIGlkPSJsb2dvbWFyay5zcXVhcmUud2hpdGUiIGNsYXNzPSJjbHMtMSIgZD0iTTMwLjE3LDMwLjIybC0xLjQ2LTEuNDYsMTkuMTYtMTkuMTdjLS4wNS0uMzktLjEzLS43Ny0uMjMtMS4xNWwtMjAuMzEsMjAuMzMsMi4xNiwyLjE2LTEuNDYsMS40Ni0zLjYyLTMuNjJMNDYuODUsNi4yOWMtLjE1LS4zLS4zMS0uNi0uNS0uODhsLTIzLjMzLDIzLjM1LDQuMzEsNC4zMS0xLjQ2LDEuNDYtMTQuMzktMTQuNCwxLjQ2LTEuNDYsOC42Miw4LjYyTDQ1LjEsMy43MmMtMi4wNy0yLjI5LTUuMDUtMy43Mi04LjM3LTMuNzJIMTEuMjdDNS4wNSwwLDAsNS4wNSwwLDExLjI3djI1LjQ4YzAsNi4yMiw1LjA1LDExLjI2LDExLjI3LDExLjI2aDI1LjQ3YzYuMjIsMCwxMS4yNy01LjA0LDExLjI3LTExLjI2VjEyLjM4bC0xNy44MywxNy44NFpNMjEuNTQsMjUuOTFsLTcuOTEtNy45MywxLjQ2LTEuNDYsNy45MSw3LjkyLTEuNDYsMS40N1pNMjMuNjksMjMuNzRsLTcuOTEtNy45MiwxLjQ2LTEuNDYsNy45Miw3LjkyLTEuNDcsMS40NlpNNDMuNCwzNS4xMmMwLDQuNTctMy43MSw4LjI4LTguMjgsOC4yOEgxMi44OGMtNC41NiwwLTguMjgtMy43MS04LjI4LTguMjhWMTIuODhjMC00LjU3LDMuNzEtOC4yOCw4LjI4LTguMjhoMjAuNzh2Mi4wOEgxMi44OGMtMy40MiwwLTYuMiwyLjc4LTYuMiw2LjJ2MjIuMjNjMCwzLjQyLDIuNzgsNi4yMSw2LjIsNi4yMWgyMi4yNGMzLjQyLDAsNi4yLTIuNzksNi4yLTYuMjF2LTMuNTFoMi4wOHYzLjUxWiIvPgogIDwvZz4KPC9zdmc+";
+  'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDggNDgiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEgewogICAgICAgIGZpbGw6ICNmZmY7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJfeDJEXy1wcm9kdWN0aW9uIj4KICAgIDxwYXRoIGlkPSJsb2dvbWFyay5zcXVhcmUud2hpdGUiIGNsYXNzPSJjbHMtMSIgZD0iTTMwLjE3LDMwLjIybC0xLjQ2LTEuNDYsMTkuMTYtMTkuMTdjLS4wNS0uMzktLjEzLS43Ny0uMjMtMS4xNWwtMjAuMzEsMjAuMzMsMi4xNiwyLjE2LTEuNDYsMS40Ni0zLjYyLTMuNjJMNDYuODUsNi4yOWMtLjE1LS4zLS4zMS0uNi0uNS0uODhsLTIzLjMzLDIzLjM1LDQuMzEsNC4zMS0xLjQ2LDEuNDYtMTQuMzktMTQuNCwxLjQ2LTEuNDYsOC42Miw4LjYyTDQ1LjEsMy43MmMtMi4wNy0yLjI5LTUuMDUtMy43Mi04LjM3LTMuNzJIMTEuMjdDNS4wNSwwLDAsNS4wNSwwLDExLjI3djI1LjQ4YzAsNi4yMiw1LjA1LDExLjI2LDExLjI3LDExLjI2aDI1LjQ3YzYuMjIsMCwxMS4yNy01LjA0LDExLjI3LTExLjI2VjEyLjM4bC0xNy44MywxNy44NFpNMjEuNTQsMjUuOTFsLTcuOTEtNy45MywxLjQ2LTEuNDYsNy45MSw3LjkyLTEuNDYsMS40N1pNMjMuNjksMjMuNzRsLTcuOTEtNy45MiwxLjQ2LTEuNDYsNy45Miw3LjkyLTEuNDcsMS40NlpNNDMuNCwzNS4xMmMwLDQuNTctMy43MSw4LjI4LTguMjgsOC4yOEgxMi44OGMtNC41NiwwLTguMjgtMy43MS04LjI4LTguMjhWMTIuODhjMC00LjU3LDMuNzEtOC4yOCw4LjI4LTguMjhoMjAuNzh2Mi4wOEgxMi44OGMtMy40MiwwLTYuMiwyLjc4LTYuMiw2LjJ2MjIuMjNjMCwzLjQyLDIuNzgsNi4yMSw2LjIsNi4yMWgyMi4yNGMzLjQyLDAsNi4yLTIuNzksNi4yLTYuMjF2LTMuNTFoMi4wOHYzLjUxWiIvPgogIDwvZz4KPC9zdmc+';
 
 /**
  * Wraps page content in the standard HTML layout.
  * @param {{ title?: string, body: string }} params
  * @returns {string}
  */
-const renderLayout = ({ title = "", body }) => `<!DOCTYPE html>
+const renderLayout = ({ title = '', body }) => `<!DOCTYPE html>
 <html lang="en" class="bg-[#080808]">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Embed your Trakt watch history as beautiful image cards.">
   <meta name="theme-color" content="#080808">
+  <link rel="icon" type="image/svg+xml" href="${TRAKT_ICON_WHITE}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -31,7 +30,7 @@ const renderLayout = ({ title = "", body }) => `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles/style.css">
-  <title>${title ? `${title} — ` : ""}trakt-widgets</title>
+  <title>${title ? `${title} | ` : ''}trakt-widgets</title>
 </head>
 <body class="bg-[#080808] text-white min-h-screen flex flex-col font-sans antialiased">
 

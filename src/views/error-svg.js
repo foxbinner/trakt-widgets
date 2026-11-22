@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Renders an SVG error card (used when the client requests image/*).
  * @param {{ error: { status: number, message: string } }} params

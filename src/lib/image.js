@@ -1,10 +1,10 @@
-const to_base64 = async (url) => {
+const to_base64 = async url => {
   try {
     const response = await fetch(url);
     if (!response.ok) return null;
     const blob = await response.arrayBuffer();
-    const contentType = response.headers.get("content-type");
-    return `data:${contentType};base64,${Buffer.from(blob).toString("base64")}`;
+    const contentType = response.headers.get('content-type');
+    return `data:${contentType};base64,${Buffer.from(blob).toString('base64')}`;
   } catch {
     return null;
   }
@@ -14,11 +14,9 @@ const to_base64 = async (url) => {
  * Metahub — free, no API key, works for movies & shows via IMDB ID.
  * https://metahub.spaces/background/{imdb_id}/1000x562/img.jpg
  */
-const getMetahubImage = async (imdb_id) => {
+const getMetahubImage = async imdb_id => {
   if (!imdb_id) return null;
-  return await to_base64(
-    `https://metahub.spaces/background/${imdb_id}/1000x562/img.jpg`,
-  );
+  return await to_base64(`https://metahub.spaces/background/${imdb_id}/1000x562/img.jpg`);
 };
 
 /**
@@ -27,9 +25,7 @@ const getMetahubImage = async (imdb_id) => {
 const getTvmazeEpisodeImage = async (tvdb_id, season, episode) => {
   if (!tvdb_id || season == null || episode == null) return null;
   try {
-    const lookupRes = await fetch(
-      `https://api.tvmaze.com/lookup/shows?thetvdb=${tvdb_id}`,
-    );
+    const lookupRes = await fetch(`https://api.tvmaze.com/lookup/shows?thetvdb=${tvdb_id}`);
     if (!lookupRes.ok) return null;
     const show = await lookupRes.json();
 
@@ -50,22 +46,18 @@ const getTvmazeEpisodeImage = async (tvdb_id, season, episode) => {
 /**
  * TVmaze — show backdrop fallback via TVDB ID.
  */
-const getTvmazeImage = async (tvdb_id) => {
+const getTvmazeImage = async tvdb_id => {
   if (!tvdb_id) return null;
   try {
-    const lookupRes = await fetch(
-      `https://api.tvmaze.com/lookup/shows?thetvdb=${tvdb_id}`,
-    );
+    const lookupRes = await fetch(`https://api.tvmaze.com/lookup/shows?thetvdb=${tvdb_id}`);
     if (!lookupRes.ok) return null;
     const show = await lookupRes.json();
 
-    const imagesRes = await fetch(
-      `https://api.tvmaze.com/shows/${show.id}/images`,
-    );
+    const imagesRes = await fetch(`https://api.tvmaze.com/shows/${show.id}/images`);
     if (!imagesRes.ok) return null;
     const images = await imagesRes.json();
 
-    const background = images.find((img) => img.type === "background");
+    const background = images.find(img => img.type === 'background');
     const imageUrl =
       background?.resolutions?.original?.url ||
       background?.resolutions?.medium?.url ||
@@ -88,7 +80,7 @@ const getTmdbImage = async (tmdb_id, type) => {
   const apiKey = process.env.TMDB;
   if (!apiKey) return null;
   try {
-    const mediaType = type === "movie" ? "movie" : "tv";
+    const mediaType = type === 'movie' ? 'movie' : 'tv';
     const res = await fetch(
       `https://api.themoviedb.org/3/${mediaType}/${tmdb_id}/images?api_key=${apiKey}`,
     );
@@ -102,14 +94,10 @@ const getTmdbImage = async (tmdb_id, type) => {
   }
 };
 
-const get = async (options) => {
+const get = async options => {
   // For shows: try TVmaze episode still first
-  if (options.type === "show") {
-    const epImage = await getTvmazeEpisodeImage(
-      options.tvdb_id,
-      options.season,
-      options.episode,
-    );
+  if (options.type === 'show') {
+    const epImage = await getTvmazeEpisodeImage(options.tvdb_id, options.season, options.episode);
     if (epImage) return epImage;
   }
 
@@ -122,10 +110,8 @@ const get = async (options) => {
   if (metahub) return metahub;
 
   // Final fallback: TVmaze show backdrop
-  if (options.type === "show") {
-    console.log(
-      `[image] falling back to TVmaze backdrop for tvdb:${options.tvdb_id}`,
-    );
+  if (options.type === 'show') {
+    console.log(`[image] falling back to TVmaze backdrop for tvdb:${options.tvdb_id}`);
     return await getTvmazeImage(options.tvdb_id);
   }
 

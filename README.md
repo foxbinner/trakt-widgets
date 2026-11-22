@@ -32,7 +32,7 @@ Drop this anywhere — GitHub README, personal site, anywhere you can render an 
 
 ## 🚀 Self-hosting
 
-**Prerequisites:** Node.js 22+, a [Trakt API](https://trakt.tv/oauth/applications) client ID, and optionally a [TMDB API key](https://www.themoviedb.org/settings/api) for HD backdrops.
+**Prerequisites:** Node.js 24, a [Trakt API](https://trakt.tv/oauth/applications) client ID, and optionally a [TMDB API key](https://www.themoviedb.org/settings/api) for HD backdrops.
 
 ```bash
 git clone https://github.com/foxbinner/trakt-widgets

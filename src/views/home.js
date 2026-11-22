@@ -1,6 +1,4 @@
-﻿"use strict";
-
-const { renderLayout } = require("./layouts/default");
+﻿const { renderLayout } = require('./layout');
 
 /**
  * Renders the home/landing page as an HTML string.
@@ -39,7 +37,7 @@ const renderHome = () => {
         <span class="text-[#ed1c24]">beautifully embedded.</span>
       </h1>
       <p class="mt-5 max-w-md text-base leading-7 text-gray-400">
-        Real-time image cards showing what you are watching on Trakt. Drop the link into any README, website, or profile.
+        An image card of the last movie or episode you watched on Trakt. Drop the link into any README, website, or profile.
       </p>
       <form class="mt-8 flex items-start gap-3" id="hero-form" onsubmit="goToCard(event)">
         <div class="relative flex-1">
@@ -73,34 +71,34 @@ const renderHome = () => {
         </div>
         <div class="flex items-center gap-3 text-sm text-gray-400">
           <span class="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-[#ed1c24]/30 bg-[#ed1c24]/10 text-[0.6rem] font-bold text-[#ed1c24]">2</span>
-          Preview your live card on the right
+          Preview your card
         </div>
         <div class="flex items-center gap-3 text-sm text-gray-400">
           <span class="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-[#ed1c24]/30 bg-[#ed1c24]/10 text-[0.6rem] font-bold text-[#ed1c24]">3</span>
-          Copy and paste the link anywhere
+          Copy the link and paste it anywhere
         </div>
       </div>
     </div>
-    <div class="flex w-full flex-col items-center gap-3 lg:flex-1 lg:min-w-0">
+    <div class="flex w-full flex-col items-center gap-3 lg:ml-auto lg:max-w-[520px]">
       <p class="text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-gray-600" id="home-card-sublabel">foxbinner &middot; demo</p>
-      <div class="w-full max-w-[640px] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] ring-1 ring-white/[0.04]" style="aspect-ratio:16/9;box-shadow:0 20px 80px rgba(0,0,0,0.7)">
+      <div class="w-full max-w-[520px] overflow-hidden border border-white/10 bg-[#0a0a0a] ring-1 ring-white/[0.04]" style="aspect-ratio:16/9;box-shadow:0 20px 80px rgba(0,0,0,0.7)">
         <img id="demo-img" class="block h-full w-full object-cover" src="/foxbinner/watched.png" alt="Trakt card preview">
       </div>
-      <p class="min-h-[1em] font-mono text-[0.65rem] text-gray-600" id="home-card-url">&nbsp;</p>
+      <p class="min-h-[1em] font-mono text-[0.65rem] text-gray-600" id="home-card-url">/foxbinner/watched.png</p>
       <div class="flex gap-2">
         <button id="btn-copy-full" onclick="copyUrl('full')" class="copy-action-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 text-xs font-medium text-gray-400 transition-colors hover:border-white/20 hover:text-white">
           <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
-          Copy Full
+          Copy (1504x846)
         </button>
         <button id="btn-copy-half" onclick="copyUrl('half')" class="copy-action-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 text-xs font-medium text-gray-400 transition-colors hover:border-white/20 hover:text-white">
           <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
-          Copy Half
+          Copy (752x423)
         </button>
       </div>
     </div>
@@ -119,7 +117,7 @@ const renderHome = () => {
     currentSlug = val;
     var imgUrl = location.origin + '/' + encodeURIComponent(val) + '/watched.png';
     demoImg.src = imgUrl + '?_=' + Date.now();
-    sublabel.textContent = val + ' \xb7 watched';
+    sublabel.textContent = val + ' \xb7 last watched';
     cardUrl.textContent = '/' + val + '/watched.png';
   }
 
